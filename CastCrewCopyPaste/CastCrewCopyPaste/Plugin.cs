@@ -197,9 +197,16 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 CastList = castList.ToArray(),
             };
 
-            var text = DVDProfilerSerializer<CastInformation>.ToString(castInformation, CastInformation.DefaultEncoding);
+            var xml = DVDProfilerSerializer<CastInformation>.ToString(castInformation, CastInformation.DefaultEncoding);
 
-            Clipboard.SetText(text);
+            try
+            {
+                Clipboard.SetDataObject(xml, true, 4, 250);
+            }
+            catch (Exception ex) //clipboard in use
+            {
+                MessageBox.Show(ex.Message, MessageBoxTexts.CriticalErrorHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CopyCrew(IDVDInfo profile)
@@ -256,9 +263,16 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 CrewList = crewList.ToArray(),
             };
 
-            var text = DVDProfilerSerializer<CrewInformation>.ToString(crewInformation, CrewInformation.DefaultEncoding);
+            var xml = DVDProfilerSerializer<CrewInformation>.ToString(crewInformation, CrewInformation.DefaultEncoding);
 
-            Clipboard.SetText(text);
+            try
+            {
+                Clipboard.SetDataObject(xml, true, 4, 250);
+            }
+            catch (Exception ex) //clipboard in use
+            {
+                MessageBox.Show(ex.Message, MessageBoxTexts.CriticalErrorHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void Paste(IDVDInfo profile)
@@ -370,10 +384,12 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                     MessageBox.Show(MessageBoxTexts.NoProfileSelected, MessageBoxTexts.WarningHeader, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+            catch (COMException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                ex = WrapCOMException(ex);
-
                 MessageBox.Show(ex.Message, MessageBoxTexts.CriticalErrorHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -411,7 +427,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
             {
                 var lastApiError = Api.GetLastError();
 
-                returnEx = new EnhancedCOMException(comEx, lastApiError);
+                returnEx = new EnhancedCOMException(lastApiError, comEx);
             }
 
             return returnEx;
