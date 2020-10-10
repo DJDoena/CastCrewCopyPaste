@@ -444,11 +444,11 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
         [ComRegisterFunction()]
         public static void RegisterServer(Type _)
         {
-            CategoryRegistrar.ICatRegister cr = (CategoryRegistrar.ICatRegister)new StdComponentCategoriesMgr();
+            var cr = (CategoryRegistrar.ICatRegister)new StdComponentCategoriesMgr();
 
-            Guid clsidThis = new Guid(ClassGuid.ClassID);
+            var clsidThis = new Guid(ClassGuid.ClassID);
 
-            Guid catid = new Guid("833F4274-5632-41DB-8FC5-BF3041CEA3F1");
+            var catid = new Guid("833F4274-5632-41DB-8FC5-BF3041CEA3F1");
 
             cr.RegisterClassImplCategories(ref clsidThis, 1, new Guid[] { catid });
         }
@@ -456,11 +456,11 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
         [ComUnregisterFunction()]
         public static void UnregisterServer(Type _)
         {
-            CategoryRegistrar.ICatRegister cr = (CategoryRegistrar.ICatRegister)new StdComponentCategoriesMgr();
+            var cr = (CategoryRegistrar.ICatRegister)new StdComponentCategoriesMgr();
 
-            Guid clsidThis = new Guid(ClassGuid.ClassID);
+            var clsidThis = new Guid(ClassGuid.ClassID);
 
-            Guid catid = new Guid("833F4274-5632-41DB-8FC5-BF3041CEA3F1");
+            var catid = new Guid("833F4274-5632-41DB-8FC5-BF3041CEA3F1");
 
             cr.UnRegisterClassImplCategories(ref clsidThis, 1, new Guid[] { catid });
         }
