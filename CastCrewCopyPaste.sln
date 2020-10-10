@@ -1,0 +1,47 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{B75C652E-5B2E-4301-8264-663D533666AE}"
+	ProjectSection(SolutionItems) = preProject
+		CastCrewCopyPaste\CastCrewCopyPasteSetup\Setup.iss = CastCrewCopyPaste\CastCrewCopyPasteSetup\Setup.iss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{FE7625F8-0B7D-4AAB-82FC-78B660381D94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVDProfilerHelper", "DVDProfilerXML\DVDProfilerHelper\DVDProfilerHelper\DVDProfilerHelper.csproj", "{461DACCA-8EBF-4C03-AD1A-C438E4EB3B36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVDProfilerXML", "DVDProfilerXML\DVDProfilerXML\DVDProfilerXML.csproj", "{2E90CC6F-892E-45B3-8812-EE52FFA3B222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CastCrewCopyPaste", "CastCrewCopyPaste\CastCrewCopyPaste\CastCrewCopyPaste.csproj", "{C21AA064-98B5-4728-8C1E-18BBD8F6D9C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{461DACCA-8EBF-4C03-AD1A-C438E4EB3B36}.Debug|x86.ActiveCfg = Debug|x86
+		{461DACCA-8EBF-4C03-AD1A-C438E4EB3B36}.Debug|x86.Build.0 = Debug|x86
+		{461DACCA-8EBF-4C03-AD1A-C438E4EB3B36}.Release|x86.ActiveCfg = Release|x86
+		{461DACCA-8EBF-4C03-AD1A-C438E4EB3B36}.Release|x86.Build.0 = Release|x86
+		{2E90CC6F-892E-45B3-8812-EE52FFA3B222}.Debug|x86.ActiveCfg = Debug|x86
+		{2E90CC6F-892E-45B3-8812-EE52FFA3B222}.Debug|x86.Build.0 = Debug|x86
+		{2E90CC6F-892E-45B3-8812-EE52FFA3B222}.Release|x86.ActiveCfg = Release|x86
+		{2E90CC6F-892E-45B3-8812-EE52FFA3B222}.Release|x86.Build.0 = Release|x86
+		{C21AA064-98B5-4728-8C1E-18BBD8F6D9C6}.Debug|x86.ActiveCfg = Debug|x86
+		{C21AA064-98B5-4728-8C1E-18BBD8F6D9C6}.Debug|x86.Build.0 = Debug|x86
+		{C21AA064-98B5-4728-8C1E-18BBD8F6D9C6}.Release|x86.ActiveCfg = Release|x86
+		{C21AA064-98B5-4728-8C1E-18BBD8F6D9C6}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{461DACCA-8EBF-4C03-AD1A-C438E4EB3B36} = {FE7625F8-0B7D-4AAB-82FC-78B660381D94}
+		{2E90CC6F-892E-45B3-8812-EE52FFA3B222} = {FE7625F8-0B7D-4AAB-82FC-78B660381D94}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E579650A-A72A-49F8-9FF9-EFC4DA0E16C8}
+	EndGlobalSection
+EndGlobal
