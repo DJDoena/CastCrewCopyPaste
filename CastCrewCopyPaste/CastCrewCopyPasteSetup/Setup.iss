@@ -1,8 +1,8 @@
 [Setup]
 AppName=Cast/Crew Copy&Paste
 AppId=CastCrewCopyPaste
-AppVerName=Cast/Crew Copy&Paste 1.0.0.0
-AppCopyright=Copyright © Doena Soft. 2020
+AppVerName=Cast/Crew Copy&Paste 1.0.0.1
+AppCopyright=Copyright © Doena Soft. 2020 - 2021
 AppPublisher=Doena Soft.
 AppPublisherURL=http://doena-journal.net/en/dvd-profiler-tools/
 DefaultDirName={commonpf32}\Doena Soft.\CastCrewCopyPaste
@@ -20,9 +20,9 @@ WizardSmallImageFile=compiler:wizmodernsmallimage-is.bmp
 DisableReadyPage=yes
 ShowLanguageDialog=no
 VersionInfoCompany=Doena Soft.
-VersionInfoCopyright=2020
+VersionInfoCopyright=2020 - 2021
 VersionInfoDescription=Plugin Template Setup
-VersionInfoVersion=1.0.0.0
+VersionInfoVersion=1.0.0.1
 UninstallDisplayIcon={app}\djdsoft.ico
 
 [Languages]
