@@ -4,9 +4,11 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources;
+using DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost;
 using DoenaSoft.DVDProfiler.DVDProfilerHelper;
 using DoenaSoft.DVDProfiler.DVDProfilerXML.Version400;
 using Invelos.DVDProfilerPlugin;
+using Microsoft.Owin.Hosting;
 
 namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 {
@@ -20,7 +22,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         private readonly Version _pluginVersion;
 
-        private IDVDProfilerAPI Api { get; set; }
+        internal static IDVDProfilerAPI Api { get; set; }
 
         private const int CopyCastMenuId = 1;
 
@@ -34,6 +36,9 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         private string _pasteMenuToken = "";
 
+        private IDisposable _webApp;
+
+        private static bool ItsMe => Environment.UserName == "djdoe";
 
         public Plugin()
         {
@@ -41,7 +46,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             _errorFile = Environment.GetEnvironmentVariable("TEMP") + @"\CastCrewCopyPasteCrash.xml";
 
-            _pluginVersion = System.Reflection.Assembly.GetAssembly(GetType()).GetName().Version;
+            _pluginVersion = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName().Version;
         }
 
         #region I... Members
@@ -51,6 +56,11 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
         public void Load(IDVDProfilerAPI api)
         {
             Api = api;
+
+            if (ItsMe)
+            {
+                _webApp = WebApp.Start<Startup>(Startup.HostBinding);
+            }
 
             if (Directory.Exists(_applicationPath) == false)
             {
@@ -69,6 +79,9 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         public void Unload()
         {
+            _webApp?.Dispose();
+            _webApp = null;
+
             Api.UnregisterMenuItem(_copyCastMenuToken);
             Api.UnregisterMenuItem(_copyCrewMenuToken);
             Api.UnregisterMenuItem(_pasteMenuToken);
@@ -82,7 +95,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
             {
                 if (EventType == PluginConstants.EVENTID_CustomMenuClick)
                 {
-                    HandleMenuClick((int)EventData);
+                    this.HandleMenuClick((int)EventData);
                 }
             }
             catch (Exception ex)
@@ -96,7 +109,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                         File.Delete(_errorFile);
                     }
 
-                    LogException(ex);
+                    this.LogException(ex);
                 }
                 catch (Exception inEx)
                 {
@@ -119,9 +132,21 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         public int GetPluginAPIVersion() => PluginConstants.API_VERSION;
 
-        public int GetVersionMajor() => _pluginVersion.Major;
+        public int GetVersionMajor()
+        {
+            var version = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName().Version;
 
-        public int GetVersionMinor() => _pluginVersion.Minor;
+            return version.Major;
+        }
+
+        public int GetVersionMinor()
+        {
+            var version = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName().Version;
+
+            var minor = version.Minor * 100 + version.Build * 10 + version.Revision;
+
+            return minor;
+        }
 
         #endregion
 
@@ -133,19 +158,19 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
             {
                 case CopyCastMenuId:
                     {
-                        TryCopyPaste(CopyCast);
+                        this.TryCopyPaste(this.CopyCast);
 
                         break;
                     }
                 case CopyCrewMenuId:
                     {
-                        TryCopyPaste(CopyCrew);
+                        this.TryCopyPaste(this.CopyCrew);
 
                         break;
                     }
                 case PasteMenuId:
                     {
-                        TryCopyPaste(Paste);
+                        this.TryCopyPaste(this.Paste);
 
                         break;
                     }
@@ -277,94 +302,14 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         private void Paste(IDVDInfo profile)
         {
-            var castInformation = TryGetInformationFromClipboard<CastInformation>();
-
-            if (castInformation != null)
+            try
             {
-                PasteCast(profile, castInformation);
+                (new Paster()).Paste(profile, Clipboard.GetText());
             }
-            else
+            catch (PasteException ex)
             {
-                var crewInformation = TryGetInformationFromClipboard<CrewInformation>();
-
-                if (crewInformation != null)
-                {
-                    PasteCrew(profile, crewInformation);
-                }
-                else
-                {
-                    MessageBox.Show(MessageBoxTexts.UnknownInformationInClipboard, MessageBoxTexts.WarningHeader, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                MessageBox.Show(ex.Message, MessageBoxTexts.WarningHeader, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private void PasteCast(IDVDInfo profile, CastInformation castInformation)
-        {
-            profile.ClearCast();
-
-            for (var castIndex = 0; castIndex < (castInformation.CastList?.Length ?? 0); castIndex++)
-            {
-                var item = castInformation.CastList[castIndex];
-
-                if (item is Divider divider)
-                {
-                    var apiDividerType = ApiConstantsToText.GetApiDividerType(divider.Type);
-
-                    profile.AddCastDivider(NotNull(divider.Caption), apiDividerType);
-                }
-                else if (item is CastMember cast)
-                {
-                    profile.AddCast(NotNull(cast.FirstName), NotNull(cast.MiddleName), NotNull(cast.LastName), cast.BirthYear, NotNull(cast.Role), NotNull(cast.CreditedAs), cast.Voice, cast.Uncredited, cast.Puppeteer);
-                }
-                else
-                {
-                    throw new NotImplementedException($"Unknown crew item {item}");
-                }
-            }
-
-            Api.SaveDVDToCollection(profile);
-            Api.ReloadCurrentDVD();
-            Api.UpdateProfileInListDisplay(profile.GetProfileID());
-        }
-
-        private void PasteCrew(IDVDInfo profile, CrewInformation crewInformation)
-        {
-            profile.ClearCrew();
-
-            for (var crewIndex = 0; crewIndex < (crewInformation.CrewList?.Length ?? 0); crewIndex++)
-            {
-                var item = crewInformation.CrewList[crewIndex];
-
-                if (item is CrewDivider divider)
-                {
-                    var apiDividerType = ApiConstantsToText.GetApiDividerType(divider.Type);
-
-                    var apiCreditType = ApiConstantsToText.GetApiCreditType(divider.CreditType);
-
-                    profile.AddCrewDivider(NotNull(divider.Caption), apiDividerType, apiCreditType);
-                }
-                else if (item is CrewMember crew)
-                {
-                    var apiCreditType = ApiConstantsToText.GetApiCreditType(crew.CreditType);
-
-                    var apiCreditSubtype = ApiConstantsToText.GetApiCreditSubType(crew.CreditSubtype);
-
-                    profile.AddCrew(NotNull(crew.FirstName), NotNull(crew.MiddleName), NotNull(crew.LastName), crew.BirthYear, apiCreditType, apiCreditSubtype, NotNull(crew.CreditedAs));
-
-                    if (crew.CustomRoleSpecified)
-                    {
-                        profile.SetCrewCustomRoleByIndex(crewIndex, NotNull(crew.CustomRole));
-                    }
-                }
-                else
-                {
-                    throw new NotImplementedException($"Unknown crew item {item}");
-                }
-            }
-
-            Api.SaveDVDToCollection(profile);
-            Api.ReloadCurrentDVD();
-            Api.UpdateProfileInListDisplay(profile.GetProfileID());
         }
 
         private void TryCopyPaste(Action<IDVDInfo> action)
@@ -408,11 +353,11 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
             }
         }
 
-        private static string NotNull(string text) => text ?? string.Empty;
+        internal static string NotNull(string text) => text ?? string.Empty;
 
         private void LogException(Exception ex)
         {
-            ex = WrapCOMException(ex);
+            ex = this.WrapCOMException(ex);
 
             var exceptionXml = new ExceptionXml(ex);
 
