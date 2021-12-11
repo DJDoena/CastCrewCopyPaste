@@ -180,6 +180,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\MessageBoxTexts.de.resx">
       <DependentUpon>MessageBoxTexts.resx</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\MessageBoxTexts.resx">
       <Generator>ResXFileCodeGenerator</Generator>

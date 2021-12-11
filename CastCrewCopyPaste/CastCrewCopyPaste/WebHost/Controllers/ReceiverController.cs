@@ -1,13 +1,13 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Web.Http;
-using System.Web.Http.Description;
-using System.Windows.Forms;
-using DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources;
-using Invelos.DVDProfilerPlugin;
-
-namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost.Controllers
+﻿namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost.Controllers
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using System.Windows.Forms;
+    using CastCrewCopyPaste.Resources;
+    using Invelos.DVDProfilerPlugin;
+
     [RoutePrefix("api/Receiver")]
     public sealed class ReceiverController : ApiController
     {
@@ -16,7 +16,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost.Controllers
         [HttpPost]
         [Route(nameof(Receive))]
         [ResponseType(typeof(void))]
-        public IHttpActionResult Receive([FromBody] string data)
+        public IHttpActionResult Receive([FromBody] string xml)
         {
             try
             {
@@ -28,10 +28,10 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost.Controllers
 
                     var message = $"Received data in background. Paste to profile '{profile.GetTitle()}'?";
 
-                    if (!string.IsNullOrWhiteSpace(data)
+                    if (!string.IsNullOrWhiteSpace(xml)
                         && MessageBox.Show(message, "Paste?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        (new Paster()).Paste(profile, data);
+                        (new Paster()).Paste(profile, xml);
                     }
 
                     return this.Ok();

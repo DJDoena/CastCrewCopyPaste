@@ -19,7 +19,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class MessageBoxTexts {
@@ -135,6 +135,24 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources {
         internal static string NoProfileSelected {
             get {
                 return ResourceManager.GetString("NoProfileSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste?.
+        /// </summary>
+        internal static string PasteHeader {
+            get {
+                return ResourceManager.GetString("PasteHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste XML information for &apos;{0}&apos; on profile &apos;{1}&apos;?.
+        /// </summary>
+        internal static string PasteQuestion {
+            get {
+                return ResourceManager.GetString("PasteQuestion", resourceCulture);
             }
         }
         

@@ -147,6 +147,12 @@ A log file was created under "{1}". Please send it to karsten@yajirobi.de.</valu
   <data name="NoProfileSelected" xml:space="preserve">
     <value>No profile selected!</value>
   </data>
+  <data name="PasteHeader" xml:space="preserve">
+    <value>Paste?</value>
+  </data>
+  <data name="PasteQuestion" xml:space="preserve">
+    <value>Paste XML information for '{0}' on profile '{1}'?</value>
+  </data>
   <data name="UnknownInformationInClipboard" xml:space="preserve">
     <value>The clipboard could not be read!</value>
   </data>

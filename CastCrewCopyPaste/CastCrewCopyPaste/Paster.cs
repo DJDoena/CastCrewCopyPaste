@@ -1,30 +1,49 @@
-﻿using System;
-using DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources;
-using DoenaSoft.DVDProfiler.DVDProfilerHelper;
-using DoenaSoft.DVDProfiler.DVDProfilerXML.Version400;
-using Invelos.DVDProfilerPlugin;
-
-namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
+﻿namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 {
+    using System;
+    using System.Windows.Forms;
+    using CastCrewCopyPaste.Resources;
+    using DVDProfilerHelper;
+    using DVDProfilerXML.Version400;
+    using Invelos.DVDProfilerPlugin;
+
     internal sealed class Paster
     {
         private IDVDProfilerAPI Api => Plugin.Api;
 
-        public void Paste(IDVDInfo profile, string data)
+        public void Paste(IDVDInfo profile, string xml)
         {
-            var castInformation = TryGetInformationFromData<CastInformation>(data);
+            var profileTitle = profile.GetTitle();
+
+            var profileTitleWithYear = $"{profileTitle} ({profile.GetProductionYear()})";
+
+            var castInformation = TryGetInformationFromData<CastInformation>(xml);
 
             if (castInformation != null)
             {
-                this.PasteCast(profile, castInformation);
+                var xmlTitle = castInformation.Title;
+
+                if (string.Equals(profileTitle, xmlTitle, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(profileTitleWithYear, xmlTitle, StringComparison.OrdinalIgnoreCase)
+                    || MessageBox.Show(string.Format(MessageBoxTexts.PasteQuestion, xmlTitle, profileTitle), MessageBoxTexts.PasteHeader, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    this.PasteCast(profile, castInformation);
+                }
             }
             else
             {
-                var crewInformation = TryGetInformationFromData<CrewInformation>(data);
+                var crewInformation = TryGetInformationFromData<CrewInformation>(xml);
 
                 if (crewInformation != null)
                 {
-                    this.PasteCrew(profile, crewInformation);
+                    var xmlTitle = crewInformation.Title;
+
+                    if (string.Equals(profileTitle, xmlTitle, StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(profileTitleWithYear, xmlTitle, StringComparison.OrdinalIgnoreCase)
+                        || MessageBox.Show(string.Format(MessageBoxTexts.PasteQuestion, xmlTitle, profileTitle), MessageBoxTexts.PasteHeader, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        this.PasteCrew(profile, crewInformation);
+                    }
                 }
                 else
                 {
@@ -57,9 +76,9 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 }
             }
 
-            Api.SaveDVDToCollection(profile);
-            Api.ReloadCurrentDVD();
-            Api.UpdateProfileInListDisplay(profile.GetProfileID());
+            this.Api.SaveDVDToCollection(profile);
+            this.Api.ReloadCurrentDVD();
+            this.Api.UpdateProfileInListDisplay(profile.GetProfileID());
         }
 
         private void PasteCrew(IDVDInfo profile, CrewInformation crewInformation)
@@ -97,9 +116,9 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 }
             }
 
-            Api.SaveDVDToCollection(profile);
-            Api.ReloadCurrentDVD();
-            Api.UpdateProfileInListDisplay(profile.GetProfileID());
+            this.Api.SaveDVDToCollection(profile);
+            this.Api.ReloadCurrentDVD();
+            this.Api.UpdateProfileInListDisplay(profile.GetProfileID());
         }
 
         private static T TryGetInformationFromData<T>(string data) where T : class, new()

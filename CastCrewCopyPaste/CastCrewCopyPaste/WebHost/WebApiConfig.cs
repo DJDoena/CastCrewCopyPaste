@@ -1,7 +1,7 @@
-﻿using System.Web.Http;
-
-namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost
+﻿namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost
 {
+    using System.Web.Http;
+
     internal static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)

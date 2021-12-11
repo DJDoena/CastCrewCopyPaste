@@ -1,17 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources;
-using DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost;
-using DoenaSoft.DVDProfiler.DVDProfilerHelper;
-using DoenaSoft.DVDProfiler.DVDProfilerXML.Version400;
-using Invelos.DVDProfilerPlugin;
-using Microsoft.Owin.Hosting;
-
 namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.InteropServices;
+    using System.Windows.Forms;
+    using CastCrewCopyPaste.Resources;
+    using CastCrewCopyPaste.WebHost;
+    using DVDProfilerHelper;
+    using DVDProfilerXML.Version400;
+    using Invelos.DVDProfilerPlugin;
+    using Microsoft.Owin.Hosting;
+
     [ComVisible(true)]
     [Guid(ClassGuid.ClassID)]
     public class Plugin : IDVDProfilerPlugin, IDVDProfilerPluginInfo
@@ -56,6 +56,8 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
         public void Load(IDVDProfilerAPI api)
         {
             Api = api;
+
+            System.Diagnostics.Debugger.Launch();
 
             if (ItsMe)
             {
@@ -132,21 +134,9 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         public int GetPluginAPIVersion() => PluginConstants.API_VERSION;
 
-        public int GetVersionMajor()
-        {
-            var version = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName().Version;
+        public int GetVersionMajor() => _pluginVersion.Major;
 
-            return version.Major;
-        }
-
-        public int GetVersionMinor()
-        {
-            var version = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName().Version;
-
-            var minor = version.Minor * 100 + version.Build * 10 + version.Revision;
-
-            return minor;
-        }
+        public int GetVersionMinor() => _pluginVersion.Minor * 100 + _pluginVersion.Build * 10 + _pluginVersion.Revision;
 
         #endregion
 
@@ -383,10 +373,10 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
         [DllImport("user32.dll")]
         public extern static int SetParent(int child, int parent);
 
-        [ComImport(), Guid("0002E005-0000-0000-C000-000000000046")]
+        [ComImport, Guid("0002E005-0000-0000-C000-000000000046")]
         internal class StdComponentCategoriesMgr { }
 
-        [ComRegisterFunction()]
+        [ComRegisterFunction]
         public static void RegisterServer(Type _)
         {
             var cr = (CategoryRegistrar.ICatRegister)new StdComponentCategoriesMgr();
@@ -395,10 +385,10 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             var catid = new Guid("833F4274-5632-41DB-8FC5-BF3041CEA3F1");
 
-            cr.RegisterClassImplCategories(ref clsidThis, 1, new Guid[] { catid });
+            cr.RegisterClassImplCategories(ref clsidThis, 1, new[] { catid });
         }
 
-        [ComUnregisterFunction()]
+        [ComUnregisterFunction]
         public static void UnregisterServer(Type _)
         {
             var cr = (CategoryRegistrar.ICatRegister)new StdComponentCategoriesMgr();
@@ -407,7 +397,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             var catid = new Guid("833F4274-5632-41DB-8FC5-BF3041CEA3F1");
 
-            cr.UnRegisterClassImplCategories(ref clsidThis, 1, new Guid[] { catid });
+            cr.UnRegisterClassImplCategories(ref clsidThis, 1, new[] { catid });
         }
 
         #endregion

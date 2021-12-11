@@ -1,8 +1,8 @@
-﻿using System.Web.Http;
-using Owin;
-
-namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost
+﻿namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost
 {
+    using System.Web.Http;
+    using Owin;
+
     internal sealed class Startup
     {
         internal const string HostBinding = "http://localhost:10001";

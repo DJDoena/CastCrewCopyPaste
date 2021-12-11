@@ -1,7 +1,7 @@
 [Setup]
 AppName=Cast/Crew Copy&Paste
 AppId=CastCrewCopyPaste
-AppVerName=Cast/Crew Copy&Paste 1.0.0.2
+AppVerName=Cast/Crew Copy&Paste 1.0.0.3
 AppCopyright=Copyright © Doena Soft. 2020 - 2021
 AppPublisher=Doena Soft.
 AppPublisherURL=http://doena-journal.net/en/dvd-profiler-tools/
@@ -13,7 +13,7 @@ Compression=zip/9
 AppMutex=InvelosDVDPro
 OutputBaseFilename=CastCrewCopyPasteSetup
 OutputDir=..\..\..\CastCrewCopyPasteSetup\Setup\CastCrewCopyPaste
-MinVersion=0,6.0
+MinVersion=0,6.1sp1
 PrivilegesRequired=admin
 WizardStyle=modern
 DisableReadyPage=yes
@@ -21,7 +21,7 @@ ShowLanguageDialog=no
 VersionInfoCompany=Doena Soft.
 VersionInfoCopyright=2020 - 2021
 VersionInfoDescription=Plugin Template Setup
-VersionInfoVersion=1.0.0.2
+VersionInfoVersion=1.0.0.3
 UninstallDisplayIcon={app}\djdsoft.ico
 
 [Languages]
@@ -42,15 +42,15 @@ Source: "DVDProfilerXML.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CastCrewCopyPaste.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "CastCrewCopyPaste.pdb"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "Microsoft.Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Microsoft.Owin.Host.HttpListener.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Microsoft.Owin.Hosting.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Swashbuckle.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "System.Net.Http.Formatting.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "System.Web.Http.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "System.Web.Http.Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "Microsoft.Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "Microsoft.Owin.Host.HttpListener.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "Microsoft.Owin.Hosting.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "Swashbuckle.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "System.Net.Http.Formatting.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "System.Web.Http.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "System.Web.Http.Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "de\DVDProfilerHelper.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
 Source: "de\CastCrewCopyPaste.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion

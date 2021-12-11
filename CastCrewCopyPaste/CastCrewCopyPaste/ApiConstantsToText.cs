@@ -1,9 +1,9 @@
-﻿using System;
-using DoenaSoft.DVDProfiler.DVDProfilerXML.Version400;
-using Invelos.DVDProfilerPlugin;
-
-namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
+﻿namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 {
+    using System;
+    using DVDProfilerXML.Version400;
+    using Invelos.DVDProfilerPlugin;
+
     internal static class ApiConstantsToText
     {
         internal static int GetApiDividerType(DividerType dividerType)

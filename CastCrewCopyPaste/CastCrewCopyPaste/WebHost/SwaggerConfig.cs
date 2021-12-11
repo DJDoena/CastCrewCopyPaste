@@ -1,8 +1,8 @@
-﻿using System.Web.Http;
-using Swashbuckle.Application;
-
-namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost
+﻿namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.WebHost
 {
+    using System.Web.Http;
+    using Swashbuckle.Application;
+
     internal sealed class SwaggerConfig
     {
         public static void RegisterOwin(HttpConfiguration config)
