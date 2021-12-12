@@ -2,6 +2,7 @@
 {
     using System.Web.Http;
     using Owin;
+    using Swashbuckle.Application;
 
     internal sealed class Startup
     {
@@ -11,11 +12,30 @@
         {
             var config = new HttpConfiguration();
 
-            SwaggerConfig.RegisterOwin(config);
+            RegisterSwagger(config);
 
-            WebApiConfig.Register(config);
+            RegisterWebApi(config);
 
             app.UseWebApi(config);
+        }
+
+        private static void RegisterSwagger(HttpConfiguration config)
+        {
+            config.EnableSwagger(c =>
+            {
+                c.SingleApiVersion("V1", "CastCrewCopyPaste Data Receiver");
+            }).EnableSwaggerUi();
+        }
+
+        public static void RegisterWebApi(HttpConfiguration config)
+        {
+            config.MapHttpAttributeRoutes();
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
         }
     }
 }

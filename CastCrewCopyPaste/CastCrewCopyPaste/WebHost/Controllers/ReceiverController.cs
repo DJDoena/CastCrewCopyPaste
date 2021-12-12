@@ -4,7 +4,6 @@
     using System.Runtime.InteropServices;
     using System.Web.Http;
     using System.Web.Http.Description;
-    using System.Windows.Forms;
     using CastCrewCopyPaste.Resources;
     using Invelos.DVDProfilerPlugin;
 
@@ -26,10 +25,7 @@
                 {
                     this.Api.DVDByProfileID(out var profile, currentDisplayedProfileId, -1, -1);
 
-                    var message = $"Received data in background. Paste to profile '{profile.GetTitle()}'?";
-
-                    if (!string.IsNullOrWhiteSpace(xml)
-                        && MessageBox.Show(message, "Paste?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (!string.IsNullOrWhiteSpace(xml))
                     {
                         (new Paster()).Paste(profile, xml);
                     }

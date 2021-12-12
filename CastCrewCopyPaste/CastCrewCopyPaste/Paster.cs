@@ -25,7 +25,7 @@
 
                 if (string.Equals(profileTitle, xmlTitle, StringComparison.OrdinalIgnoreCase)
                     || string.Equals(profileTitleWithYear, xmlTitle, StringComparison.OrdinalIgnoreCase)
-                    || MessageBox.Show(string.Format(MessageBoxTexts.PasteQuestion, xmlTitle, profileTitle), MessageBoxTexts.PasteHeader, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    || MessageBox.Show(string.Format(MessageBoxTexts.PasteQuestion, "Cast", xmlTitle, profileTitle), MessageBoxTexts.PasteHeader, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     this.PasteCast(profile, castInformation);
                 }
@@ -40,7 +40,7 @@
 
                     if (string.Equals(profileTitle, xmlTitle, StringComparison.OrdinalIgnoreCase)
                         || string.Equals(profileTitleWithYear, xmlTitle, StringComparison.OrdinalIgnoreCase)
-                        || MessageBox.Show(string.Format(MessageBoxTexts.PasteQuestion, xmlTitle, profileTitle), MessageBoxTexts.PasteHeader, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        || MessageBox.Show(string.Format(MessageBoxTexts.PasteQuestion, "Crew", xmlTitle, profileTitle), MessageBoxTexts.PasteHeader, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         this.PasteCrew(profile, crewInformation);
                     }
@@ -64,11 +64,11 @@
                 {
                     var apiDividerType = ApiConstantsToText.GetApiDividerType(divider.Type);
 
-                    profile.AddCastDivider(Plugin.NotNull(divider.Caption), apiDividerType);
+                    profile.AddCastDivider(divider.Caption.NotNull(), apiDividerType);
                 }
                 else if (item is CastMember cast)
                 {
-                    profile.AddCast(Plugin.NotNull(cast.FirstName), Plugin.NotNull(cast.MiddleName), Plugin.NotNull(cast.LastName), cast.BirthYear, Plugin.NotNull(cast.Role), Plugin.NotNull(cast.CreditedAs), cast.Voice, cast.Uncredited, cast.Puppeteer);
+                    profile.AddCast(cast.FirstName.NotNull(), cast.MiddleName.NotNull(), cast.LastName.NotNull(), cast.BirthYear, cast.Role.NotNull(), cast.CreditedAs.NotNull(), cast.Voice, cast.Uncredited, cast.Puppeteer);
                 }
                 else
                 {
@@ -95,7 +95,7 @@
 
                     var apiCreditType = ApiConstantsToText.GetApiCreditType(divider.CreditType);
 
-                    profile.AddCrewDivider(Plugin.NotNull(divider.Caption), apiDividerType, apiCreditType);
+                    profile.AddCrewDivider(divider.Caption.NotNull(), apiDividerType, apiCreditType);
                 }
                 else if (item is CrewMember crew)
                 {
@@ -103,11 +103,11 @@
 
                     var apiCreditSubtype = ApiConstantsToText.GetApiCreditSubType(crew.CreditSubtype);
 
-                    profile.AddCrew(Plugin.NotNull(crew.FirstName), Plugin.NotNull(crew.MiddleName), Plugin.NotNull(crew.LastName), crew.BirthYear, apiCreditType, apiCreditSubtype, Plugin.NotNull(crew.CreditedAs));
+                    profile.AddCrew(crew.FirstName.NotNull(), crew.MiddleName.NotNull(), crew.LastName.NotNull(), crew.BirthYear, apiCreditType, apiCreditSubtype, crew.CreditedAs.NotNull());
 
                     if (crew.CustomRoleSpecified)
                     {
-                        profile.SetCrewCustomRoleByIndex(crewIndex, Plugin.NotNull(crew.CustomRole));
+                        profile.SetCrewCustomRoleByIndex(crewIndex, crew.CustomRole.NotNull());
                     }
                 }
                 else

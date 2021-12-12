@@ -151,7 +151,7 @@ A log file was created under "{1}". Please send it to karsten@yajirobi.de.</valu
     <value>Einfügen?</value>
   </data>
   <data name="PasteQuestion" xml:space="preserve">
-    <value>XML Information für '{0}' auf Profil '{1}' einfügen?</value>
+    <value>{0} Information für '{1}' auf Profil '{2}' einfügen?</value>
   </data>
   <data name="UnknownInformationInClipboard" xml:space="preserve">
     <value>Die Zwischenablage konnte nicht gelesen werden!</value>

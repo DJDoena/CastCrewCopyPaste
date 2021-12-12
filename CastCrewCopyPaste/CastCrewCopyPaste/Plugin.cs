@@ -3,6 +3,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using CastCrewCopyPaste.Resources;
@@ -16,13 +17,11 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
     [Guid(ClassGuid.ClassID)]
     public class Plugin : IDVDProfilerPlugin, IDVDProfilerPluginInfo
     {
-        private readonly string _errorFile;
-
         private readonly string _applicationPath;
 
-        private readonly Version _pluginVersion;
+        private readonly string _errorFile;
 
-        internal static IDVDProfilerAPI Api { get; set; }
+        private readonly string _settingsFile;
 
         private const int CopyCastMenuId = 1;
 
@@ -36,9 +35,19 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         private string _pasteMenuToken = "";
 
+        private const int ReceiverSettingMenuId = 4;
+
+        private string _receiverSettingMenuToken = "";
+
         private IDisposable _webApp;
 
-        private static bool ItsMe => Environment.UserName == "djdoe";
+        private Settings _settings;
+
+        internal static IDVDProfilerAPI Api { get; set; }
+
+        private AssemblyName Assembly => System.Reflection.Assembly.GetAssembly(this.GetType()).GetName();
+
+        private Version PluginVersion => this.Assembly.Version;
 
         public Plugin()
         {
@@ -46,7 +55,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             _errorFile = Environment.GetEnvironmentVariable("TEMP") + @"\CastCrewCopyPasteCrash.xml";
 
-            _pluginVersion = System.Reflection.Assembly.GetAssembly(this.GetType()).GetName().Version;
+            _settingsFile = _applicationPath + "CastCrewCopyPasteSettings.xml";
         }
 
         #region I... Members
@@ -57,11 +66,28 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
         {
             Api = api;
 
-            System.Diagnostics.Debugger.Launch();
-
-            if (ItsMe)
+            if (Directory.Exists(_applicationPath) == false)
             {
-                _webApp = WebApp.Start<Startup>(Startup.HostBinding);
+                Directory.CreateDirectory(_applicationPath);
+            }
+
+            if (File.Exists(_settingsFile))
+            {
+                try
+                {
+                    _settings = DVDProfilerSerializer<Settings>.Deserialize(_settingsFile);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(MessageBoxTexts.FileCantBeRead, _settingsFile, ex.Message), MessageBoxTexts.ErrorHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            this.CreateSettings();
+
+            if (_settings.DefaultValues.ReceiveFromCastCrewEdit)
+            {
+                this.LoadReceiver();
             }
 
             if (Directory.Exists(_applicationPath) == false)
@@ -71,24 +97,53 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             Api.RegisterForEvent(PluginConstants.EVENTID_FormCreated);
 
-            _copyCastMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form
-                , @"DVD", "Copy Cast", CopyCastMenuId);
-            _copyCrewMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form
-                , @"DVD", "Copy Crew", CopyCrewMenuId);
-            _pasteMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form
-                , @"DVD", "Paste Cast / Crew", PasteMenuId);
+            _copyCastMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Copy Cast", CopyCastMenuId);
+
+            _copyCrewMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Copy Crew", CopyCrewMenuId);
+
+            _pasteMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Paste Cast / Crew", PasteMenuId);
+
+            _receiverSettingMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"Tools", "Enable Cast/Crew Edit 2 Receiver", ReceiverSettingMenuId);
+
+            api.SetRegisteredMenuItemChecked(_receiverSettingMenuToken, _settings.DefaultValues.ReceiveFromCastCrewEdit);
+
+            var pluginVersion = this.PluginVersion.ToString();
+
+            if (_settings.CurrentVersion != pluginVersion)
+            {
+                this.OpenReadme();
+
+                _settings.CurrentVersion = pluginVersion;
+            }
         }
+
+        private void LoadReceiver() => _webApp = WebApp.Start<Startup>(Startup.HostBinding);
 
         public void Unload()
         {
-            _webApp?.Dispose();
-            _webApp = null;
+            this.UnloadReceiver();
+
+            try
+            {
+                DVDProfilerSerializer<Settings>.Serialize(_settingsFile, _settings);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(MessageBoxTexts.FileCantBeWritten, _settingsFile, ex.Message), MessageBoxTexts.ErrorHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             Api.UnregisterMenuItem(_copyCastMenuToken);
             Api.UnregisterMenuItem(_copyCrewMenuToken);
             Api.UnregisterMenuItem(_pasteMenuToken);
+            Api.UnregisterMenuItem(_receiverSettingMenuToken);
 
             Api = null;
+        }
+
+        private void UnloadReceiver()
+        {
+            _webApp?.Dispose();
+            _webApp = null;
         }
 
         public void HandleEvent(int EventType, object EventData)
@@ -134,9 +189,9 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         public int GetPluginAPIVersion() => PluginConstants.API_VERSION;
 
-        public int GetVersionMajor() => _pluginVersion.Major;
+        public int GetVersionMajor() => this.PluginVersion.Major;
 
-        public int GetVersionMinor() => _pluginVersion.Minor * 100 + _pluginVersion.Build * 10 + _pluginVersion.Revision;
+        public int GetVersionMinor() => this.PluginVersion.Minor * 100 + this.PluginVersion.Build * 10 + this.PluginVersion.Revision;
 
         #endregion
 
@@ -164,6 +219,23 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
                         break;
                     }
+                case ReceiverSettingMenuId:
+                    {
+                        _settings.DefaultValues.ReceiveFromCastCrewEdit = !_settings.DefaultValues.ReceiveFromCastCrewEdit;
+
+                        Api.SetRegisteredMenuItemChecked(_receiverSettingMenuToken, _settings.DefaultValues.ReceiveFromCastCrewEdit);
+
+                        if (_settings.DefaultValues.ReceiveFromCastCrewEdit)
+                        {
+                            this.LoadReceiver();
+                        }
+                        else
+                        {
+                            this.UnloadReceiver();
+                        }
+
+                        break;
+                    }
             }
         }
 
@@ -181,12 +253,12 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 {
                     castList.Add(new CastMember()
                     {
-                        FirstName = NotNull(firstName),
-                        MiddleName = NotNull(middleName),
-                        LastName = NotNull(lastName),
+                        FirstName = firstName.NotNull(),
+                        MiddleName = middleName.NotNull(),
+                        LastName = lastName.NotNull(),
                         BirthYear = birthYear,
-                        Role = NotNull(role),
-                        CreditedAs = NotNull(creditedAs),
+                        Role = role.NotNull(),
+                        CreditedAs = creditedAs.NotNull(),
                         Voice = voice,
                         Uncredited = uncredited,
                         Puppeteer = puppeteer,
@@ -200,7 +272,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
                     castList.Add(new Divider()
                     {
-                        Caption = NotNull(caption),
+                        Caption = caption.NotNull(),
                         Type = dividerType,
                     });
                 }
@@ -208,7 +280,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             var castInformation = new CastInformation()
             {
-                Title = NotNull(profile.GetTitle()),
+                Title = profile.GetTitle().NotNull(),
                 CastList = castList.ToArray(),
             };
 
@@ -244,15 +316,15 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
                     crewList.Add(new CrewMember()
                     {
-                        FirstName = NotNull(firstName),
-                        MiddleName = NotNull(middleName),
-                        LastName = NotNull(lastName),
+                        FirstName = firstName.NotNull(),
+                        MiddleName = middleName.NotNull(),
+                        LastName = lastName.NotNull(),
                         BirthYear = birthYear,
                         CreditType = creditType,
                         CreditSubtype = creditSubtype,
                         CustomRole = customRole,
-                        CustomRoleSpecified = !string.IsNullOrEmpty(customRole),
-                        CreditedAs = NotNull(creditedAs),
+                        CustomRoleSpecified = !string.IsNullOrWhiteSpace(customRole),
+                        CreditedAs = creditedAs.NotNull(),
                     });
                 }
                 else
@@ -265,7 +337,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
                     crewList.Add(new CrewDivider()
                     {
-                        Caption = NotNull(caption),
+                        Caption = caption.NotNull(),
                         Type = dividerType,
                         CreditType = creditType,
                     });
@@ -274,7 +346,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             var crewInformation = new CrewInformation()
             {
-                Title = NotNull(profile.GetTitle()),
+                Title = profile.GetTitle().NotNull(),
                 CrewList = crewList.ToArray(),
             };
 
@@ -329,22 +401,6 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
             }
         }
 
-        private static T TryGetInformationFromClipboard<T>() where T : class, new()
-        {
-            try
-            {
-                var information = DVDProfilerSerializer<T>.FromString(Clipboard.GetText(), CastInformation.DefaultEncoding);
-
-                return information;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        internal static string NotNull(string text) => text ?? string.Empty;
-
         private void LogException(Exception ex)
         {
             ex = this.WrapCOMException(ex);
@@ -366,6 +422,37 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
             }
 
             return returnEx;
+        }
+
+        private void CreateSettings()
+        {
+            if (_settings == null)
+            {
+                _settings = new Settings();
+            }
+
+            if (_settings.DefaultValues == null)
+            {
+                _settings.DefaultValues = new DefaultValues();
+            }
+        }
+
+        private void OpenReadme()
+        {
+            //System.Diagnostics.Debugger.Launch();
+
+            var dllPath = new FileInfo((new Uri(this.Assembly.CodeBase)).LocalPath);
+
+            var helpFile = Path.Combine(dllPath.DirectoryName, "ReadMe", "ReadMe.html");
+
+            if (File.Exists(helpFile))
+            {
+                using (var helpForm = new HelpForm(helpFile))
+                {
+                    helpForm.Text = "Read Me";
+                    helpForm.ShowDialog();
+                }
+            }
         }
 
         #region Plugin Registering

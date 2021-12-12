@@ -148,7 +148,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Paste XML information for &apos;{0}&apos; on profile &apos;{1}&apos;?.
+        ///   Looks up a localized string similar to Paste {0} information for &apos;{1}&apos; on profile &apos;{2}&apos;?.
         /// </summary>
         internal static string PasteQuestion {
             get {
