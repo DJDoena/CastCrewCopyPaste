@@ -135,6 +135,11 @@
                 case "Story By":
                     {
                         return PluginConstants.CREDITSUB_StoryBy;
+
+                    }
+                case "Developed By":
+                    {
+                        return PluginConstants.CREDITSUB_DevelopedBy;
                     }
                 case "Producer":
                     {
@@ -331,6 +336,10 @@
                             case PluginConstants.CREDITSUB_StoryBy:
                                 {
                                     return "Story By";
+                                }
+                            case PluginConstants.CREDITSUB_DevelopedBy:
+                                {
+                                    return "Developed By";
                                 }
                             case 254: //there's no constant for it
                                 {
