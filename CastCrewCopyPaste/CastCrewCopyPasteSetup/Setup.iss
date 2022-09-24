@@ -37,8 +37,8 @@ Name: "full"; Description: "Full installation"
 Source: "djdsoft.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.DVDProfilerHelper.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.DVDProfilerXML.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "CastCrewCopyPaste.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "CastCrewCopyPaste.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.CastCrewCopyPaste.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.CastCrewCopyPaste.pdb"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "Microsoft.Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Microsoft.Owin.Host.HttpListener.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -51,7 +51,7 @@ Source: "System.Web.Http.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "System.Web.Http.Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "de\DoenaSoft.DVDProfilerHelper.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
-Source: "de\CastCrewCopyPaste.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
+Source: "de\DoenaSoft.CastCrewCopyPaste.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
 
 Source: "ReadMe\ReadMe.html"; DestDir: "{app}\ReadMe"; Flags: ignoreversion
 
