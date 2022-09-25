@@ -1,8 +1,8 @@
 [Setup]
 AppName=Cast/Crew Copy&Paste
 AppId=CastCrewCopyPaste
-AppVerName=Cast/Crew Copy&Paste 1.1.0.0
-AppCopyright=Copyright © Doena Soft. 2020 - 2021
+AppVerName=Cast/Crew Copy&Paste 1.2.0.0
+AppCopyright=Copyright © Doena Soft. 2020 - 2022
 AppPublisher=Doena Soft.
 AppPublisherURL=http://doena-journal.net/en/dvd-profiler-tools/
 DefaultDirName={commonpf32}\Doena Soft.\CastCrewCopyPaste
@@ -19,9 +19,9 @@ WizardStyle=modern
 DisableReadyPage=yes
 ShowLanguageDialog=no
 VersionInfoCompany=Doena Soft.
-VersionInfoCopyright=2020 - 2021
+VersionInfoCopyright=2020 - 2022
 VersionInfoDescription=Plugin Template Setup
-VersionInfoVersion=1.1.0.0
+VersionInfoVersion=1.2.0.0
 UninstallDisplayIcon={app}\djdsoft.ico
 
 [Languages]
@@ -40,16 +40,6 @@ Source: "DoenaSoft.DVDProfilerXML.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.CastCrewCopyPaste.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.CastCrewCopyPaste.pdb"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "Microsoft.Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Microsoft.Owin.Host.HttpListener.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Microsoft.Owin.Hosting.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Swashbuckle.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "System.Net.Http.Formatting.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "System.Web.Http.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "System.Web.Http.Owin.dll"; DestDir: "{app}"; Flags: ignoreversion
-
 Source: "de\DoenaSoft.DVDProfilerHelper.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
 Source: "de\DoenaSoft.CastCrewCopyPaste.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
 
@@ -58,12 +48,12 @@ Source: "ReadMe\ReadMe.html"; DestDir: "{app}\ReadMe"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Run]
-Filename: "{win}\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe"; Parameters: "/codebase ""{app}\CastCrewCopyPaste.dll"""; Flags: runhidden
+Filename: "{win}\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe"; Parameters: "/codebase ""{app}\DoenaSoft.CastCrewCopyPaste.dll"""; Flags: runhidden
 
 ;[UninstallDelete]
 
 [UninstallRun]
-Filename: "{win}\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe"; Parameters: "/u ""{app}\CastCrewCopyPaste.dll"""; Flags: runhidden
+Filename: "{win}\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe"; Parameters: "/u ""{app}\DoenaSoft.CastCrewCopyPaste.dll"""; Flags: runhidden
 
 [Registry]
 ; Register - Cleanup ahead of time in case the user didn't uninstall the previous version.

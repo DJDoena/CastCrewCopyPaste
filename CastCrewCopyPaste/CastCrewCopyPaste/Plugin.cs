@@ -7,11 +7,9 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using CastCrewCopyPaste.Resources;
-    using CastCrewCopyPaste.WebHost;
     using DVDProfilerHelper;
     using DVDProfilerXML.Version400;
     using Invelos.DVDProfilerPlugin;
-    using Microsoft.Owin.Hosting;
 
     [ComVisible(true)]
     [Guid(ClassGuid.ClassID)]
@@ -39,7 +37,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         private string _receiverSettingMenuToken = "";
 
-        private IDisposable _webApp;
+        private CastCrewReceiverService _wcfService;
 
         private Settings _settings;
 
@@ -64,60 +62,74 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         public void Load(IDVDProfilerAPI api)
         {
-            Api = api;
+            //Debugger.Launch();
 
-            if (Directory.Exists(_applicationPath) == false)
+            try
             {
-                Directory.CreateDirectory(_applicationPath);
-            }
+                Api = api;
 
-            if (File.Exists(_settingsFile))
-            {
-                try
+                if (Directory.Exists(_applicationPath) == false)
                 {
-                    _settings = DVDProfilerSerializer<Settings>.Deserialize(_settingsFile);
+                    Directory.CreateDirectory(_applicationPath);
                 }
-                catch (Exception ex)
+
+                if (File.Exists(_settingsFile))
                 {
-                    MessageBox.Show(string.Format(MessageBoxTexts.FileCantBeRead, _settingsFile, ex.Message), MessageBoxTexts.ErrorHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        _settings = DVDProfilerSerializer<Settings>.Deserialize(_settingsFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(string.Format(MessageBoxTexts.FileCantBeRead, _settingsFile, ex.Message), MessageBoxTexts.ErrorHeader, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+                this.CreateSettings();
+
+                if (_settings.DefaultValues.ReceiveFromCastCrewEdit)
+                {
+                    this.LoadReceiver();
+                }
+
+                if (Directory.Exists(_applicationPath) == false)
+                {
+                    Directory.CreateDirectory(_applicationPath);
+                }
+
+                Api.RegisterForEvent(PluginConstants.EVENTID_FormCreated);
+
+                _copyCastMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Copy Cast", CopyCastMenuId);
+
+                _copyCrewMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Copy Crew", CopyCrewMenuId);
+
+                _pasteMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Paste Cast / Crew", PasteMenuId);
+
+                _receiverSettingMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"Tools", "Enable Cast/Crew Edit 2 Receiver", ReceiverSettingMenuId);
+
+                api.SetRegisteredMenuItemChecked(_receiverSettingMenuToken, _settings.DefaultValues.ReceiveFromCastCrewEdit);
+
+                var pluginVersion = this.PluginVersion.ToString();
+
+                if (_settings.CurrentVersion != pluginVersion)
+                {
+                    this.OpenReadme();
+
+                    _settings.CurrentVersion = pluginVersion;
                 }
             }
-
-            this.CreateSettings();
-
-            if (_settings.DefaultValues.ReceiveFromCastCrewEdit)
+            catch (Exception ex)
             {
-                this.LoadReceiver();
-            }
-
-            if (Directory.Exists(_applicationPath) == false)
-            {
-                Directory.CreateDirectory(_applicationPath);
-            }
-
-            Api.RegisterForEvent(PluginConstants.EVENTID_FormCreated);
-
-            _copyCastMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Copy Cast", CopyCastMenuId);
-
-            _copyCrewMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Copy Crew", CopyCrewMenuId);
-
-            _pasteMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"DVD", "Paste Cast / Crew", PasteMenuId);
-
-            _receiverSettingMenuToken = Api.RegisterMenuItem(PluginConstants.FORMID_Main, PluginConstants.MENUID_Form, @"Tools", "Enable Cast/Crew Edit 2 Receiver", ReceiverSettingMenuId);
-
-            api.SetRegisteredMenuItemChecked(_receiverSettingMenuToken, _settings.DefaultValues.ReceiveFromCastCrewEdit);
-
-            var pluginVersion = this.PluginVersion.ToString();
-
-            if (_settings.CurrentVersion != pluginVersion)
-            {
-                this.OpenReadme();
-
-                _settings.CurrentVersion = pluginVersion;
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void LoadReceiver() => _webApp = WebApp.Start<Startup>(Startup.HostBinding);
+        private void LoadReceiver()
+        {
+            _wcfService = new CastCrewReceiverService();
+
+            _wcfService.Start();
+        }
 
         public void Unload()
         {
@@ -142,8 +154,8 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         private void UnloadReceiver()
         {
-            _webApp?.Dispose();
-            _webApp = null;
+            _wcfService?.Finish();
+            _wcfService = null;
         }
 
         public void HandleEvent(int EventType, object EventData)
