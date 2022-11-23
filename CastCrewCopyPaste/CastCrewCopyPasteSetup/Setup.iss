@@ -1,7 +1,7 @@
 [Setup]
 AppName=Cast/Crew Copy&Paste
 AppId=CastCrewCopyPaste
-AppVerName=Cast/Crew Copy&Paste 1.2.0.0
+AppVerName=Cast/Crew Copy&Paste 1.2.0.1
 AppCopyright=Copyright © Doena Soft. 2020 - 2022
 AppPublisher=Doena Soft.
 AppPublisherURL=http://doena-journal.net/en/dvd-profiler-tools/
@@ -21,7 +21,7 @@ ShowLanguageDialog=no
 VersionInfoCompany=Doena Soft.
 VersionInfoCopyright=2020 - 2022
 VersionInfoDescription=Plugin Template Setup
-VersionInfoVersion=1.2.0.0
+VersionInfoVersion=1.2.0.1
 UninstallDisplayIcon={app}\djdsoft.ico
 
 [Languages]

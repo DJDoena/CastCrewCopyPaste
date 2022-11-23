@@ -19,6 +19,8 @@
             var binding = new NetTcpBinding();
 
             binding.Security.Mode = SecurityMode.None;
+            binding.MaxBufferSize = int.MaxValue;
+            binding.MaxReceivedMessageSize = int.MaxValue;
 
             _serviceHost.AddServiceEndpoint(typeof(ICastCrewReceiver), binding, new Uri(CastCrewReceiverServiceContract.TcpAddress));
 

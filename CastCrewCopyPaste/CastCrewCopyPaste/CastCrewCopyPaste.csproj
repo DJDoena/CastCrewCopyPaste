@@ -177,7 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DoenaSoft.DVDProfilerXML">
-      <Version>4.1.2</Version>
+      <Version>4.1.6</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
