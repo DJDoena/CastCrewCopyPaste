@@ -3,6 +3,7 @@
     using System;
     using System.Windows.Forms;
     using CastCrewCopyPaste.Resources;
+    using DoenaSoft.ToolBox.Generics;
     using DVDProfilerHelper;
     using DVDProfilerXML.Version400;
     using Invelos.DVDProfilerPlugin;
@@ -125,7 +126,7 @@
         {
             try
             {
-                var information = DVDProfilerSerializer<T>.FromString(data, CastInformation.DefaultEncoding);
+                var information = Serializer<T>.FromString(data, CastInformation.DefaultEncoding);
 
                 return information;
             }

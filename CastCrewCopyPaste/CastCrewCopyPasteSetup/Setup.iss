@@ -1,8 +1,8 @@
 [Setup]
 AppName=Cast/Crew Copy&Paste
 AppId=CastCrewCopyPaste
-AppVerName=Cast/Crew Copy&Paste 1.2.0.1
-AppCopyright=Copyright © Doena Soft. 2020 - 2022
+AppVerName=Cast/Crew Copy&Paste 1.2.0.2
+AppCopyright=Copyright © Doena Soft. 2020 - 2024
 AppPublisher=Doena Soft.
 AppPublisherURL=http://doena-journal.net/en/dvd-profiler-tools/
 DefaultDirName={commonpf32}\Doena Soft.\CastCrewCopyPaste
@@ -19,9 +19,9 @@ WizardStyle=modern
 DisableReadyPage=yes
 ShowLanguageDialog=no
 VersionInfoCompany=Doena Soft.
-VersionInfoCopyright=2020 - 2022
+VersionInfoCopyright=2020 - 2024
 VersionInfoDescription=Plugin Template Setup
-VersionInfoVersion=1.2.0.1
+VersionInfoVersion=1.2.0.2
 UninstallDisplayIcon={app}\djdsoft.ico
 
 [Languages]
@@ -35,12 +35,21 @@ Name: "full"; Description: "Full installation"
 
 [Files]
 Source: "djdsoft.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DoenaSoft.DVDProfilerHelper.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DoenaSoft.DVDProfilerXML.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.DVDProfiler.Helper.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.DVDProfiler.Xml.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.AbstractionLayer.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.AbstractionLayer.Web.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.AbstractionLayer.WinForms.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.ToolBox.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "System.Resources.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.CastCrewCopyPaste.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.CastCrewCopyPaste.pdb"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "de\DoenaSoft.DVDProfilerHelper.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
+Source: "de\DoenaSoft.DVDProfiler.Helper.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
 Source: "de\DoenaSoft.CastCrewCopyPaste.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
 
 Source: "ReadMe\ReadMe.html"; DestDir: "{app}\ReadMe"; Flags: ignoreversion

@@ -7,6 +7,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using CastCrewCopyPaste.Resources;
+    using DoenaSoft.ToolBox.Generics;
     using DVDProfilerHelper;
     using DVDProfilerXML.Version400;
     using Invelos.DVDProfilerPlugin;
@@ -77,7 +78,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 {
                     try
                     {
-                        _settings = DVDProfilerSerializer<Settings>.Deserialize(_settingsFile);
+                        _settings = Serializer<Settings>.Deserialize(_settingsFile);
                     }
                     catch (Exception ex)
                     {
@@ -137,7 +138,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             try
             {
-                DVDProfilerSerializer<Settings>.Serialize(_settingsFile, _settings);
+                Serializer<Settings>.Serialize(_settingsFile, _settings);
             }
             catch (Exception ex)
             {
@@ -296,7 +297,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 CastList = castList.ToArray(),
             };
 
-            var xml = DVDProfilerSerializer<CastInformation>.ToString(castInformation, CastInformation.DefaultEncoding);
+            var xml = Serializer<CastInformation>.ToString(castInformation, CastInformation.DefaultEncoding);
 
             try
             {
@@ -362,7 +363,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 CrewList = crewList.ToArray(),
             };
 
-            var xml = DVDProfilerSerializer<CrewInformation>.ToString(crewInformation, CrewInformation.DefaultEncoding);
+            var xml = Serializer<CrewInformation>.ToString(crewInformation, CrewInformation.DefaultEncoding);
 
             try
             {
@@ -419,7 +420,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             var exceptionXml = new ExceptionXml(ex);
 
-            DVDProfilerSerializer<ExceptionXml>.Serialize(_errorFile, exceptionXml);
+            Serializer<ExceptionXml>.Serialize(_errorFile, exceptionXml);
         }
 
         private Exception WrapCOMException(Exception ex)
