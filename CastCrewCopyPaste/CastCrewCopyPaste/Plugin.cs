@@ -1,17 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources;
+using DoenaSoft.DVDProfiler.DVDProfilerHelper;
+using DoenaSoft.DVDProfiler.DVDProfilerXML;
+using DoenaSoft.DVDProfiler.DVDProfilerXML.Version400;
+using DoenaSoft.ToolBox.Generics;
+using Invelos.DVDProfilerPlugin;
+
 namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Windows.Forms;
-    using CastCrewCopyPaste.Resources;
-    using DoenaSoft.ToolBox.Generics;
-    using DVDProfilerHelper;
-    using DVDProfilerXML.Version400;
-    using Invelos.DVDProfilerPlugin;
-
     [ComVisible(true)]
     [Guid(ClassGuid.ClassID)]
     public class Plugin : IDVDProfilerPlugin, IDVDProfilerPluginInfo
@@ -48,6 +49,11 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
         private Version PluginVersion => this.Assembly.Version;
 
+        static Plugin()
+        {
+            DVDProfilerXMLAssemblyLoader.Load();
+        }
+
         public Plugin()
         {
             _applicationPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Doena Soft\CastCrewCopyPasteSettings\";
@@ -78,7 +84,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 {
                     try
                     {
-                        _settings = Serializer<Settings>.Deserialize(_settingsFile);
+                        _settings = XmlSerializer<Settings>.Deserialize(_settingsFile);
                     }
                     catch (Exception ex)
                     {
@@ -138,7 +144,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             try
             {
-                Serializer<Settings>.Serialize(_settingsFile, _settings);
+                XmlSerializer<Settings>.Serialize(_settingsFile, _settings);
             }
             catch (Exception ex)
             {
@@ -297,7 +303,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 CastList = castList.ToArray(),
             };
 
-            var xml = Serializer<CastInformation>.ToString(castInformation, CastInformation.DefaultEncoding);
+            var xml = XmlSerializer<CastInformation>.ToString(castInformation, CastInformation.DefaultEncoding);
 
             try
             {
@@ -363,7 +369,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
                 CrewList = crewList.ToArray(),
             };
 
-            var xml = Serializer<CrewInformation>.ToString(crewInformation, CrewInformation.DefaultEncoding);
+            var xml = XmlSerializer<CrewInformation>.ToString(crewInformation, CrewInformation.DefaultEncoding);
 
             try
             {
@@ -420,7 +426,7 @@ namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
 
             var exceptionXml = new ExceptionXml(ex);
 
-            Serializer<ExceptionXml>.Serialize(_errorFile, exceptionXml);
+            XmlSerializer<ExceptionXml>.Serialize(_errorFile, exceptionXml);
         }
 
         private Exception WrapCOMException(Exception ex)

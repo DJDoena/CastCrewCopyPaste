@@ -1,13 +1,12 @@
-﻿namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
-{
-    using System;
-    using System.Windows.Forms;
-    using CastCrewCopyPaste.Resources;
-    using DoenaSoft.ToolBox.Generics;
-    using DVDProfilerHelper;
-    using DVDProfilerXML.Version400;
-    using Invelos.DVDProfilerPlugin;
+﻿using System;
+using System.Windows.Forms;
+using DoenaSoft.DVDProfiler.CastCrewCopyPaste.Resources;
+using DoenaSoft.DVDProfiler.DVDProfilerXML.Version400;
+using DoenaSoft.ToolBox.Generics;
+using Invelos.DVDProfilerPlugin;
 
+namespace DoenaSoft.DVDProfiler.CastCrewCopyPaste
+{
     internal sealed class Paster
     {
         private IDVDProfilerAPI Api => Plugin.Api;
@@ -126,7 +125,7 @@
         {
             try
             {
-                var information = Serializer<T>.FromString(data, CastInformation.DefaultEncoding);
+                var information = XmlSerializer<T>.FromString(data, CastInformation.DefaultEncoding);
 
                 return information;
             }

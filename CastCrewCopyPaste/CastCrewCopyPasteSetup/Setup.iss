@@ -1,27 +1,27 @@
 [Setup]
 AppName=Cast/Crew Copy&Paste
 AppId=CastCrewCopyPaste
-AppVerName=Cast/Crew Copy&Paste 1.2.0.2
-AppCopyright=Copyright © Doena Soft. 2020 - 2024
+AppVerName=Cast/Crew Copy&Paste 1.2.1.0
+AppCopyright=Copyright © Doena Soft. 2020 - 2025
 AppPublisher=Doena Soft.
 AppPublisherURL=http://doena-journal.net/en/dvd-profiler-tools/
 DefaultDirName={commonpf32}\Doena Soft.\CastCrewCopyPaste
 ; DefaultGroupName=Doena Soft.
 DirExistsWarning=No
-SourceDir=..\CastCrewCopyPaste\bin\x86\
+SourceDir=..\CastCrewCopyPaste\bin\x86\Release\net481
 Compression=zip/9
 AppMutex=InvelosDVDPro
 OutputBaseFilename=CastCrewCopyPasteSetup
-OutputDir=..\..\..\CastCrewCopyPasteSetup\Setup\CastCrewCopyPaste
+OutputDir=..\Setup\CastCrewCopyPaste
 MinVersion=0,6.1sp1
 PrivilegesRequired=admin
 WizardStyle=modern
 DisableReadyPage=yes
 ShowLanguageDialog=no
 VersionInfoCompany=Doena Soft.
-VersionInfoCopyright=2020 - 2024
+VersionInfoCopyright=2020 - 2025
 VersionInfoDescription=Plugin Template Setup
-VersionInfoVersion=1.2.0.2
+VersionInfoVersion=1.2.1.0
 UninstallDisplayIcon={app}\djdsoft.ico
 
 [Languages]
@@ -41,11 +41,13 @@ Source: "DoenaSoft.AbstractionLayer.UI.dll"; DestDir: "{app}"; Flags: ignorevers
 Source: "DoenaSoft.AbstractionLayer.Web.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.AbstractionLayer.WinForms.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.ToolBox.dll"; DestDir: "{app}"; Flags: ignoreversion
+
 Source: "System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "System.Resources.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
+
 Source: "DoenaSoft.CastCrewCopyPaste.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DoenaSoft.CastCrewCopyPaste.pdb"; DestDir: "{app}"; Flags: ignoreversion
 
